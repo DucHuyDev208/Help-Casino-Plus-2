@@ -2,55 +2,71 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Baccarat Helper</title>
+  <title>Baccarat Helper Popup</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       background: #000;
-      color: white;
       font-family: Arial, sans-serif;
-      text-align: center;
+    }
+
+    /* Popup chính */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      max-width: 90%;
+      background: #111;
+      border-radius: 15px;
+      box-shadow: 0 0 20px cyan;
+      padding: 15px;
+      color: white;
+      z-index: 9999;
+      cursor: move;
     }
 
     h1 {
       color: cyan;
-      margin: 20px 0 10px;
-      font-size: 26px;
+      font-size: 20px;
+      margin: 5px 0 10px;
+      text-align: center;
     }
 
     #prediction {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
-      background: #111;
+      background: #000;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 10px 20px;
+      padding: 10px 15px;
       border-radius: 12px;
-      margin: 10px 0 20px;
+      margin: 5px auto 15px;
       border: 2px solid cyan;
       box-shadow: 0 0 10px cyan;
     }
 
     #prediction .icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       display: inline-block;
     }
 
     #controls {
-      margin-bottom: 15px;
+      text-align: center;
+      margin-bottom: 10px;
     }
 
     button {
-      margin: 6px;
-      padding: 12px 20px;
+      margin: 4px;
+      padding: 8px 14px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -62,28 +78,31 @@
     .reset-btn  { background: #777; color: white; }
 
     h3 {
-      margin-top: 15px;
-      font-size: 18px;
+      margin: 8px 0 5px;
+      font-size: 15px;
+      text-align: center;
     }
 
     #history {
-      background: #111;
-      display: inline-block;
+      background: #000;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 28px);
+      justify-content: center;
+      gap: 6px;
       padding: 10px;
       border-radius: 10px;
-      margin-top: 10px;
-      max-width: 90%;
+      max-height: 200px;
+      overflow-y: auto;
     }
 
     .circle {
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      margin: 4px;
-      font-size: 16px;
+      font-size: 13px;
       font-weight: bold;
       color: white;
     }
@@ -94,58 +113,120 @@
   </style>
 </head>
 <body>
-  <h1>Baccarat Helper 🎲</h1>
-  <div id="prediction">Dự đoán: Chưa có dữ liệu</div>
-  <div id="controls">
-    <button class="banker-btn" onclick="addResult('Banker')">Banker</button>
-    <button class="player-btn" onclick="addResult('Player')">Player</button>
-    <button class="tie-btn" onclick="addResult('Tie')">Tie</button>
-    <button class="undo-btn" onclick="undoLast()">Undo</button>
-    <button class="reset-btn" onclick="resetHistory()">Reset</button>
+  <div id="popup">
+    <h1>Baccarat Helper 🎲</h1>
+    <div id="prediction">Dự đoán: Chưa có dữ liệu</div>
+    <div id="controls">
+      <button class="banker-btn" onclick="addResult('Banker')">Banker</button>
+      <button class="player-btn" onclick="addResult('Player')">Player</button>
+      <button class="tie-btn" onclick="addResult('Tie')">Tie</button><br>
+      <button class="undo-btn" onclick="undoLast()">Undo</button>
+      <button class="reset-btn" onclick="resetHistory()">Reset</button>
+    </div>
+    <h3>Lịch sử</h3>
+    <div id="history"></div>
   </div>
-  <h3>Lịch sử</h3>
-  <div id="history"></div>
 
   <script>
-    const P = "Player", B = "Banker", T = "Tie";
-    let history = [];
+    const P="Player", B="Banker", T="Tie";
+    let history=[];
 
-    // --- Load từ localStorage ---
-    window.onload = () => {
-      const saved = localStorage.getItem("baccarat_history");
-      if (saved) {
-        history = JSON.parse(saved);
-        renderHistory();
-        predictNext();
-      }
+    // Load
+    window.onload=()=>{
+      const saved=localStorage.getItem("baccarat_history");
+      if(saved){ history=JSON.parse(saved); renderHistory(); predictNext(); }
     };
 
-    function saveHistory() {
-      localStorage.setItem("baccarat_history", JSON.stringify(history));
+    function saveHistory(){ localStorage.setItem("baccarat_history",JSON.stringify(history)); }
+
+    function addResult(r){ history.push(r); saveHistory(); renderHistory(); predictNext(); }
+    function undoLast(){ history.pop(); saveHistory(); renderHistory(); predictNext(); }
+    function resetHistory(){ history=[]; localStorage.removeItem("baccarat_history"); renderHistory(); document.getElementById("prediction").textContent="Dự đoán: Chưa có dữ liệu"; }
+
+    function renderHistory(){
+      const c=document.getElementById("history"); c.innerHTML="";
+      history.forEach(r=>{
+        const div=document.createElement("div"); div.classList.add("circle");
+        if(r===P){ div.classList.add("player"); div.textContent="P"; }
+        if(r===B){ div.classList.add("banker"); div.textContent="B"; }
+        if(r===T){ div.classList.add("tie"); div.textContent="T"; }
+        c.appendChild(div);
+      });
     }
 
-    function addResult(result) {
-      history.push(result);
-      saveHistory();
-      renderHistory();
-      predictNext();
+    function nonTie(seq){ return seq.filter(x=>x===P||x===B); }
+
+    function markovVote(seq){
+      const s=nonTie(seq); if(s.length<2) return{P:0.5,B:0.5};
+      let pp=0,pb=0,bb=0,bp=0;
+      for(let i=0;i<s.length-1;i++){ const a=s[i],c=s[i+1];
+        if(a===P&&c===P)pp++; if(a===P&&c===B)pb++;
+        if(a===B&&c===B)bb++; if(a===B&&c===P)bp++;
+      }
+      const last=s[s.length-1]; let pNextP,pNextB;
+      if(last===P){const t=pp+pb; pNextP=t?pp/t:0.5; pNextB=t?pb/t:0.5;}
+      else{const t=bb+bp; pNextB=t?bb/t:0.5; pNextP=t?bp/t:0.5;}
+      return{P:pNextP,B:pNextB};
     }
 
-    function undoLast() {
-      history.pop();
-      saveHistory();
-      renderHistory();
-      predictNext();
+    function streakVote(seq){
+      const s=nonTie(seq); if(s.length===0) return{P:0.5,B:0.5};
+      let side=s[s.length-1],len=1; for(let i=s.length-2;i>=0;i--){ if(s[i]===side)len++; else break; }
+      let bias=0.52; if(len>=5)bias=0.8; else if(len===4)bias=0.7; else if(len===3)bias=0.6; else if(len===2)bias=0.45;
+      return side===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
     }
 
-    function resetHistory() {
-      history = [];
-      localStorage.removeItem("baccarat_history");
-      renderHistory();
-      document.getElementById("prediction").textContent = "Dự đoán: Chưa có dữ liệu";
+    function pingpongVote(seq){
+      const s=nonTie(seq); if(s.length<4) return{P:0.5,B:0.5};
+      const a=s[s.length-4],b=s[s.length-3],c=s[s.length-2],d=s[s.length-1];
+      const isAlt=(a!==b)&&(b!==c)&&(c!==d)&&(a===c)&&(b===d);
+      if(!isAlt)return{P:0.5,B:0.5};
+      const next=(d===B)?P:B;
+      return next===P?{P:0.65,B:0.35}:{P:0.35,B:0.65};
     }
 
-    function renderHistory() {
+    function frequencyVote(seq,n=10){
+      const s=nonTie(seq).slice(-n); if(s.length===0)return{P:0.5,B:0.5};
+      const p=s.filter(x=>x===P).length,b=s.length-p; if(p===b)return{P:0.5,B:0.5};
+      const maj=p>b?P:B,gap=Math.abs(p-b)/s.length; const bias=0.55+Math.min(0.25,gap*0.5);
+      return maj===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
+    }
+
+    function combineVotes(votes,w){let p=0,b=0;votes.forEach((v,i)=>{p+=v.P*w[i];b+=v.B*w[i];});const s=p+b;return{P:p/s,B:b/s};}
+
+    function predictNext(){
+      const pred=document.getElementById("prediction");
+      if(history.length===0){ pred.textContent="Dự đoán: Chưa có dữ liệu"; return; }
+      const v1=markovVote(history),v2=streakVote(history),v3=pingpongVote(history),v4=frequencyVote(history,10);
+      const final=combineVotes([v1,v2,v3,v4],[0.5,0.2,0.2,0.1]);
+      const pick=final.P>=final.B?P:B;
+      let color=pick===P?"#1976d2":"#d32f2f";
+      pred.innerHTML=`Dự đoán: ${pick} <span class="icon" style="background:${color}"></span>`;
+    }
+
+    // --- Kéo popup ---
+    dragElement(document.getElementById("popup"));
+    function dragElement(el){
+      let pos1=0,pos2=0,pos3=0,pos4=0;
+      el.onmousedown=dragMouseDown;
+      el.ontouchstart=dragMouseDown;
+      function dragMouseDown(e){
+        e=e||window.event; e.preventDefault();
+        pos3=e.clientX||e.touches[0].clientX; pos4=e.clientY||e.touches[0].clientY;
+        document.onmouseup=closeDrag; document.onmousemove=elementDrag;
+        document.ontouchend=closeDrag; document.ontouchmove=elementDrag;
+      }
+      function elementDrag(e){
+        e=e||window.event; e.preventDefault();
+        const clientX=e.clientX||e.touches[0].clientX, clientY=e.clientY||e.touches[0].clientY;
+        pos1=pos3-clientX; pos2=pos4-clientY; pos3=clientX; pos4=clientY;
+        el.style.top=(el.offsetTop-pos2)+"px"; el.style.left=(el.offsetLeft-pos1)+"px";
+      }
+      function closeDrag(){ document.onmouseup=null; document.onmousemove=null; document.ontouchend=null; document.ontouchmove=null; }
+    }
+  </script>
+</body>
+</html>    function renderHistory() {
       const container = document.getElementById("history");
       container.innerHTML = "";
       history.forEach(r => {
