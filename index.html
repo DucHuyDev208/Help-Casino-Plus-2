@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Baccarat Helper</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #000;
+      background-color: #000;
       color: #fff;
     }
     h1 {
       color: cyan;
+      margin-bottom: 10px;
     }
     #prediction {
-      margin: 10px 0;
       font-size: 20px;
       font-weight: bold;
+      margin: 12px 0;
     }
     .dot {
       display: inline-block;
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      margin-left: 8px;
+      margin-left: 6px;
     }
     .red { background: #d32f2f; }
     .green { background: #1976d2; }
     button {
-      margin: 4px;
-      padding: 6px 12px;
+      margin: 5px;
+      padding: 8px 14px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -41,22 +42,25 @@
     .tie { background: #388e3c; color: #fff; }
     .undo { background: orange; }
     .reset { background: gray; }
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
     #history {
-      margin-top: 15px;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
     }
     .circle {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       margin: 3px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #fff;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
     }
     .circle.player { background: #1976d2; }
@@ -67,6 +71,7 @@
 <body>
   <h1>Baccarat Helper 🎲</h1>
   <div id="prediction">Dự đoán: ...</div>
+
   <div>
     <button class="banker" onclick="addResult('B')">Banker</button>
     <button class="player" onclick="addResult('P')">Player</button>
@@ -74,6 +79,7 @@
     <button class="undo" onclick="undo()">Undo</button>
     <button class="reset" onclick="resetHistory()">Reset</button>
   </div>
+
   <h3>Lịch sử</h3>
   <div id="history"></div>
 
@@ -86,59 +92,82 @@
       history.forEach(r => {
         const div = document.createElement("div");
         div.classList.add("circle");
-        if(r==="P"){div.classList.add("player");div.textContent="P";}
-        if(r==="B"){div.classList.add("banker");div.textContent="B";}
-        if(r==="T"){div.classList.add("tie");div.textContent="T";}
+        if (r === "P") { div.classList.add("player"); div.textContent = "P"; }
+        if (r === "B") { div.classList.add("banker"); div.textContent = "B"; }
+        if (r === "T") { div.classList.add("tie"); div.textContent = "T"; }
         c.appendChild(div);
       });
     }
 
-    function nonTie(seq){return seq.filter(x=>x==="P"||x==="B");}
-    function markovVote(seq){
-      const s=nonTie(seq); if(s.length<2)return {P:0.5,B:0.5};
-      let p=0,b=0;
-      for(let i=s.length-2;i>=0;i--){
-        if(s[i]===s[s.length-2]){ if(s[i+1]==="P")p++; else b++; }
+    function nonTie(seq) { return seq.filter(x => x === "P" || x === "B"); }
+
+    function markovVote(seq) {
+      const s = nonTie(seq);
+      if (s.length < 2) return { P: 0.5, B: 0.5 };
+      let p = 0, b = 0;
+      for (let i = s.length - 2; i >= 0; i--) {
+        if (s[i] === s[s.length - 2]) {
+          if (s[i + 1] === "P") p++; else b++;
+        }
       }
-      const tot=p+b;
-      if(tot===0)return {P:0.5,B:0.5};
-      return {P:p/tot,B:b/tot};
+      const tot = p + b;
+      if (tot === 0) return { P: 0.5, B: 0.5 };
+      return { P: p / tot, B: b / tot };
     }
-    function streakVote(seq){
-      const s=nonTie(seq); if(s.length===0)return {P:0.5,B:0.5};
-      const last=s[s.length-1];
-      return last==="P"?{P:0.6,B:0.4}:{P:0.4,B:0.6};
+
+    function streakVote(seq) {
+      const s = nonTie(seq);
+      if (s.length === 0) return { P: 0.5, B: 0.5 };
+      const last = s[s.length - 1];
+      return last === "P" ? { P: 0.6, B: 0.4 } : { P: 0.4, B: 0.6 };
     }
-    function pingpongVote(seq){
-      const s=nonTie(seq); if(s.length<2)return {P:0.5,B:0.5};
-      const last=s[s.length-1]; const prev=s[s.length-2];
-      if(last===prev) return last==="P"?{P:0.3,B:0.7}:{P:0.7,B:0.3};
-      else return last==="P"?{P:0.7,B:0.3}:{P:0.3,B:0.7};
+
+    function pingpongVote(seq) {
+      const s = nonTie(seq);
+      if (s.length < 2) return { P: 0.5, B: 0.5 };
+      const last = s[s.length - 1], prev = s[s.length - 2];
+      if (last === prev)
+        return last === "P" ? { P: 0.3, B: 0.7 } : { P: 0.7, B: 0.3 };
+      else
+        return last === "P" ? { P: 0.7, B: 0.3 } : { P: 0.3, B: 0.7 };
     }
-    function frequencyVote(seq,n=10){
-      const s=nonTie(seq).slice(-n); if(s.length===0)return {P:0.5,B:0.5};
-      let p=s.filter(x=>x==="P").length;
-      let b=s.length-p;
-      return {P:p/s.length,B:b/s.length};
+
+    function frequencyVote(seq, n = 10) {
+      const s = nonTie(seq).slice(-n);
+      if (s.length === 0) return { P: 0.5, B: 0.5 };
+      let p = s.filter(x => x === "P").length;
+      let b = s.length - p;
+      return { P: p / s.length, B: b / s.length };
     }
-    function combineVotes(votes,w=[1,1,1,1]){
-      let p=0,b=0;
-      votes.forEach((v,i)=>{p+=v.P*w[i]; b+=v.B*w[i];});
-      const sum=p+b; return {P:p/sum,B:b/sum};
+
+    function combineVotes(votes, w = [1, 1, 1, 1]) {
+      let p = 0, b = 0;
+      votes.forEach((v, i) => { p += v.P * w[i]; b += v.B * w[i]; });
+      const sum = p + b;
+      return { P: p / sum, B: b / sum };
     }
-    function predictNext(){
-      const pred=document.getElementById("prediction");
-      if(history.length===0){pred.textContent="Dự đoán: Chưa có dữ liệu";return;}
-      const v1=markovVote(history), v2=streakVote(history),
-            v3=pingpongVote(history), v4=frequencyVote(history);
-      const final=combineVotes([v1,v2,v3,v4]);
-      const pick=final.P>=final.B?"Player":"Banker";
-      const dot = final.P>=final.B?'<span class="dot green"></span>':'<span class="dot red"></span>';
+
+    function predictNext() {
+      const pred = document.getElementById("prediction");
+      if (history.length === 0) {
+        pred.textContent = "Dự đoán: Chưa có dữ liệu";
+        return;
+      }
+      const v1 = markovVote(history),
+            v2 = streakVote(history),
+            v3 = pingpongVote(history),
+            v4 = frequencyVote(history);
+      const final = combineVotes([v1, v2, v3, v4]);
+      const pick = final.P >= final.B ? "Player" : "Banker";
+      const dot = final.P >= final.B
+        ? '<span class="dot green"></span>'
+        : '<span class="dot red"></span>';
       pred.innerHTML = `Dự đoán: ${pick} ${dot}`;
     }
-    function addResult(r){history.push(r);renderHistory();predictNext();}
-    function undo(){history.pop();renderHistory();predictNext();}
-    function resetHistory(){history.length=0;renderHistory();predictNext();}
+
+    function addResult(r) { history.push(r); renderHistory(); predictNext(); }
+    function undo() { history.pop(); renderHistory(); predictNext(); }
+    function resetHistory() { history.length = 0; renderHistory(); predictNext(); }
   </script>
 </body>
 </html>
