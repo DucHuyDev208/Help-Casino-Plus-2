@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Baccarat Helper</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: #000;
-      color: white;
+      color: #fff;
       font-family: Arial, sans-serif;
       text-align: center;
     }
-
     h1 {
       color: cyan;
       margin: 20px 0 10px;
       font-size: 26px;
     }
-
     #prediction {
       font-size: 20px;
       font-weight: bold;
@@ -33,18 +32,13 @@
       border: 2px solid cyan;
       box-shadow: 0 0 10px cyan;
     }
-
     #prediction .icon {
       width: 16px;
       height: 16px;
       border-radius: 50%;
       display: inline-block;
     }
-
-    #controls {
-      margin-bottom: 15px;
-    }
-
+    #controls { margin-bottom: 15px; }
     button {
       margin: 6px;
       padding: 12px 20px;
@@ -54,18 +48,14 @@
       font-weight: bold;
       cursor: pointer;
     }
+    .banker-btn { background: #d32f2f; color: #fff; }
+    .player-btn { background: #1976d2; color: #fff; }
+    .tie-btn    { background: #388e3c; color: #fff; }
+    .undo-btn   { background: orange; color: #fff; }
+    .reset-btn  { background: #777; color: #fff; }
+    .open-btn   { background: cyan; color: #000; }
 
-    .banker-btn { background: #d32f2f; color: white; }
-    .player-btn { background: #1976d2; color: white; }
-    .tie-btn    { background: #388e3c; color: white; }
-    .undo-btn   { background: orange; color: white; }
-    .reset-btn  { background: #777; color: white; }
-    .open-btn   { background: cyan; color: black; }
-
-    h3 {
-      margin-top: 15px;
-      font-size: 18px;
-    }
+    h3 { margin-top: 15px; font-size: 18px; }
 
     #history {
       background: #111;
@@ -75,7 +65,6 @@
       margin-top: 10px;
       max-width: 90%;
     }
-
     .circle {
       width: 32px;
       height: 32px;
@@ -86,65 +75,59 @@
       margin: 4px;
       font-size: 16px;
       font-weight: bold;
-      color: white;
+      color: #fff;
     }
-
     .player { background: #1976d2; }
     .banker { background: #d32f2f; }
     .tie    { background: #388e3c; }
 
-    /* Popup modal */
+    /* Modal (popup) */
     .modal {
       display: none;
       position: fixed;
       z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.7);
       justify-content: center;
       align-items: center;
     }
-
     .modal-content {
       background: #111;
       padding: 20px;
       border-radius: 12px;
       border: 2px solid cyan;
       box-shadow: 0 0 10px cyan;
-      width: 80%;
-      max-width: 500px;
+      width: 84%;
+      max-width: 520px;
       text-align: center;
-      color: white;
+      color: #fff;
     }
-
     .close-btn {
       float: right;
       font-size: 20px;
       cursor: pointer;
       color: cyan;
     }
-
     .bookmarklet {
       display: inline-block;
       margin-top: 20px;
       padding: 10px 15px;
       background: cyan;
-      color: black;
+      color: #000;
       font-weight: bold;
       border-radius: 8px;
       text-decoration: none;
     }
 
-    /* Khối open tool dưới cùng */
-    #footer {
-      margin-top: 30px;
-      padding-bottom: 20px;
-    }
+    /* Footer để đưa OPEN TOOL xuống dưới */
+    #footer { margin-top: 30px; padding-bottom: 30px; }
   </style>
 </head>
 <body>
   <h1>Baccarat Helper 🎲</h1>
+
   <div id="prediction">Dự đoán: Chưa có dữ liệu</div>
+
   <div id="controls">
     <button class="banker-btn" onclick="addResult('Banker')">Banker</button>
     <button class="player-btn" onclick="addResult('Player')">Player</button>
@@ -152,41 +135,47 @@
     <button class="undo-btn" onclick="undoLast()">Undo</button>
     <button class="reset-btn" onclick="resetHistory()">Reset</button>
   </div>
+
   <h3>Lịch sử</h3>
   <div id="history"></div>
 
-  <!-- Đưa Open Tool xuống cuối -->
+  <!-- OPEN TOOL ở cuối trang -->
   <div id="footer">
     <button class="open-btn" onclick="openModal()">OPEN TOOL</button>
   </div>
 
   <!-- Popup modal -->
-  <div id="toolModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">✖</span>
-      <h2>Kéo bookmarklet này lên thanh Bookmark</h2>
+  <div id="toolModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="toolTitle">
+      <span class="close-btn" onclick="closeModal()" aria-label="Đóng">✖</span>
+      <h2 id="toolTitle">Kéo bookmarklet này lên thanh Bookmark</h2>
       <p>Sau đó bạn có thể mở Baccarat Helper ở bất kỳ trang web nào.</p>
-      <a class="bookmarklet" href="javascript:(function(){alert('Baccarat Helper đang chạy!');})();">📌 Baccarat Helper</a>
+      <!-- Bookmarklet demo: mở nhanh overlay thông báo -->
+      <a class="bookmarklet"
+         href="javascript:(function(){try{var o=document.createElement('div');o.style.cssText='position:fixed;inset:auto 20px 20px auto;background:#111;color:#0ff;border:2px solid #0ff;border-radius:10px;padding:10px 14px;z-index:999999;font:14px Arial;box-shadow:0 0 10px #0ff';o.textContent='Baccarat Helper đã chạy (demo)!';document.body.appendChild(o);setTimeout(function(){o.remove();},2000);}catch(e){alert('Bookmarklet chạy!');}})();">📌 Baccarat Helper</a>
     </div>
   </div>
 
+  <!-- Toàn bộ JS đặt CUỐI FILE để tránh lỗi hiển thị code -->
   <script>
+    // ========= State & Storage =========
     const P = "Player", B = "Banker", T = "Tie";
     let history = [];
 
-    window.onload = () => {
-      const saved = localStorage.getItem("baccarat_history");
-      if (saved) {
-        history = JSON.parse(saved);
-        renderHistory();
-        predictNext();
-      }
-    };
+    window.addEventListener("load", () => {
+      try {
+        const saved = localStorage.getItem("baccarat_history");
+        if (saved) history = JSON.parse(saved) || [];
+      } catch {}
+      renderHistory();
+      predictNext();
+    });
 
     function saveHistory() {
-      localStorage.setItem("baccarat_history", JSON.stringify(history));
+      try { localStorage.setItem("baccarat_history", JSON.stringify(history)); } catch {}
     }
 
+    // ========= UI Actions =========
     function addResult(result) {
       history.push(result);
       saveHistory();
@@ -203,7 +192,7 @@
 
     function resetHistory() {
       history = [];
-      localStorage.removeItem("baccarat_history");
+      try { localStorage.removeItem("baccarat_history"); } catch {}
       renderHistory();
       document.getElementById("prediction").textContent = "Dự đoán: Chưa có dữ liệu";
     }
@@ -221,11 +210,12 @@
       });
     }
 
+    // ========= Thuật toán dự đoán (không dự đoán Tie) =========
     function nonTie(seq) { return seq.filter(x => x === P || x === B); }
 
     function markovVote(seq) {
       const s = nonTie(seq);
-      if (s.length < 2) return {P:0.5, B:0.5};
+      if (s.length < 2) return { P: 0.5, B: 0.5 };
       let pp=0,pb=0,bb=0,bp=0;
       for (let i=0;i<s.length-1;i++){
         const a=s[i], c=s[i+1];
@@ -235,15 +225,13 @@
         if (a===B && c===P) bp++;
       }
       const last=s[s.length-1];
-      let pNextP, pNextB;
       if (last===P){
         const total=pp+pb;
-        pNextP=total?pp/total:0.5; pNextB=total?pb/total:0.5;
+        return { P: total ? pp/total : 0.5, B: total ? pb/total : 0.5 };
       } else {
         const total=bb+bp;
-        pNextB=total?bb/total:0.5; pNextP=total?bp/total:0.5;
+        return { B: total ? bb/total : 0.5, P: total ? bp/total : 0.5 };
       }
-      return {P:pNextP,B:pNextB};
     }
 
     function streakVote(seq) {
@@ -252,7 +240,7 @@
       for(let i=s.length-2;i>=0;i--){ if(s[i]===side) len++; else break; }
       let bias=0.52;
       if(len>=5) bias=0.80; else if(len===4) bias=0.70; else if(len===3) bias=0.60; else if(len===2) bias=0.45;
-      return side===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
+      return side===P ? {P:bias,B:1-bias} : {P:1-bias,B:bias};
     }
 
     function pingpongVote(seq) {
@@ -261,7 +249,7 @@
       const isAlt=(a!==b)&&(b!==c)&&(c!==d)&&(a===c)&&(b===d);
       if(!isAlt) return {P:0.5,B:0.5};
       const next=(d===B)?P:B;
-      return next===P?{P:0.65,B:0.35}:{P:0.35,B:0.65};
+      return next===P ? {P:0.65,B:0.35} : {P:0.35,B:0.65};
     }
 
     function frequencyVote(seq,n=10){
@@ -271,209 +259,35 @@
       if(p===b) return {P:0.5,B:0.5};
       const maj=p>b?P:B, gap=Math.abs(p-b)/s.length;
       const bias=0.55+Math.min(0.25,gap*0.5);
-      return maj===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
+      return maj===P ? {P:bias,B:1-bias} : {P:1-bias,B:bias};
     }
 
     function combineVotes(votes,weights){
       let p=0,b=0;
-      votes.forEach((v,i)=>{p+=v.P*weights[i]; b+=v.B*weights[i];});
-      const sum=p+b;
-      return {P:p/sum,B:b/sum};
+      votes.forEach((v,i)=>{ p+=v.P*weights[i]; b+=v.B*weights[i]; });
+      const sum=p+b; return {P:p/sum, B:b/sum};
     }
 
     function predictNext(){
       const pred=document.getElementById("prediction");
-      if(history.length===0){ 
-        pred.textContent="Dự đoán: Chưa có dữ liệu"; 
-        return; 
+      if(history.length===0){
+        pred.textContent="Dự đoán: Chưa có dữ liệu";
+        return;
       }
-
-      const v1=markovVote(history), 
-            v2=streakVote(history), 
-            v3=pingpongVote(history), 
+      const v1=markovVote(history),
+            v2=streakVote(history),
+            v3=pingpongVote(history),
             v4=frequencyVote(history,10);
 
       const final=combineVotes([v1,v2,v3,v4],[0.5,0.2,0.2,0.1]);
-
-      const pick=final.P>=final.B?P:B;
-      let color= pick===P ? "#1976d2" : "#d32f2f";
-
-      pred.innerHTML = `Dự đoán: ${pick} <span class="icon" style="background:${color}"></span>`;
+      const pick = final.P >= final.B ? P : B;
+      const color = pick===P ? "#1976d2" : "#d32f2f";
+      pred.innerHTML = "Dự đoán: " + pick + ' <span class="icon" style="background:'+ color +'"></span>';
     }
 
+    // ========= Modal controls =========
     function openModal(){ document.getElementById("toolModal").style.display="flex"; }
     function closeModal(){ document.getElementById("toolModal").style.display="none"; }
-  </script>
-</body>
-</html>      history.forEach(r=>{
-        const div=document.createElement("div"); div.classList.add("circle");
-        if(r===P){ div.classList.add("player"); div.textContent="P"; }
-        if(r===B){ div.classList.add("banker"); div.textContent="B"; }
-        if(r===T){ div.classList.add("tie"); div.textContent="T"; }
-        c.appendChild(div);
-      });
-    }
-
-    function nonTie(seq){ return seq.filter(x=>x===P||x===B); }
-
-    function markovVote(seq){
-      const s=nonTie(seq); if(s.length<2) return{P:0.5,B:0.5};
-      let pp=0,pb=0,bb=0,bp=0;
-      for(let i=0;i<s.length-1;i++){ const a=s[i],c=s[i+1];
-        if(a===P&&c===P)pp++; if(a===P&&c===B)pb++;
-        if(a===B&&c===B)bb++; if(a===B&&c===P)bp++;
-      }
-      const last=s[s.length-1]; let pNextP,pNextB;
-      if(last===P){const t=pp+pb; pNextP=t?pp/t:0.5; pNextB=t?pb/t:0.5;}
-      else{const t=bb+bp; pNextB=t?bb/t:0.5; pNextP=t?bp/t:0.5;}
-      return{P:pNextP,B:pNextB};
-    }
-
-    function streakVote(seq){
-      const s=nonTie(seq); if(s.length===0) return{P:0.5,B:0.5};
-      let side=s[s.length-1],len=1; for(let i=s.length-2;i>=0;i--){ if(s[i]===side)len++; else break; }
-      let bias=0.52; if(len>=5)bias=0.8; else if(len===4)bias=0.7; else if(len===3)bias=0.6; else if(len===2)bias=0.45;
-      return side===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
-    }
-
-    function pingpongVote(seq){
-      const s=nonTie(seq); if(s.length<4) return{P:0.5,B:0.5};
-      const a=s[s.length-4],b=s[s.length-3],c=s[s.length-2],d=s[s.length-1];
-      const isAlt=(a!==b)&&(b!==c)&&(c!==d)&&(a===c)&&(b===d);
-      if(!isAlt)return{P:0.5,B:0.5};
-      const next=(d===B)?P:B;
-      return next===P?{P:0.65,B:0.35}:{P:0.35,B:0.65};
-    }
-
-    function frequencyVote(seq,n=10){
-      const s=nonTie(seq).slice(-n); if(s.length===0)return{P:0.5,B:0.5};
-      const p=s.filter(x=>x===P).length,b=s.length-p; if(p===b)return{P:0.5,B:0.5};
-      const maj=p>b?P:B,gap=Math.abs(p-b)/s.length; const bias=0.55+Math.min(0.25,gap*0.5);
-      return maj===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
-    }
-
-    function combineVotes(votes,w){let p=0,b=0;votes.forEach((v,i)=>{p+=v.P*w[i];b+=v.B*w[i];});const s=p+b;return{P:p/s,B:b/s};}
-
-    function predictNext(){
-      const pred=document.getElementById("prediction");
-      if(history.length===0){ pred.textContent="Dự đoán: Chưa có dữ liệu"; return; }
-      const v1=markovVote(history),v2=streakVote(history),v3=pingpongVote(history),v4=frequencyVote(history,10);
-      const final=combineVotes([v1,v2,v3,v4],[0.5,0.2,0.2,0.1]);
-      const pick=final.P>=final.B?P:B;
-      let color=pick===P?"#1976d2":"#d32f2f";
-      pred.innerHTML=`Dự đoán: ${pick} <span class="icon" style="background:${color}"></span>`;
-    }
-
-    // --- Kéo popup ---
-    dragElement(document.getElementById("popup"));
-    function dragElement(el){
-      let pos1=0,pos2=0,pos3=0,pos4=0;
-      el.onmousedown=dragMouseDown;
-      el.ontouchstart=dragMouseDown;
-      function dragMouseDown(e){
-        e=e||window.event; e.preventDefault();
-        pos3=e.clientX||e.touches[0].clientX; pos4=e.clientY||e.touches[0].clientY;
-        document.onmouseup=closeDrag; document.onmousemove=elementDrag;
-        document.ontouchend=closeDrag; document.ontouchmove=elementDrag;
-      }
-      function elementDrag(e){
-        e=e||window.event; e.preventDefault();
-        const clientX=e.clientX||e.touches[0].clientX, clientY=e.clientY||e.touches[0].clientY;
-        pos1=pos3-clientX; pos2=pos4-clientY; pos3=clientX; pos4=clientY;
-        el.style.top=(el.offsetTop-pos2)+"px"; el.style.left=(el.offsetLeft-pos1)+"px";
-      }
-      function closeDrag(){ document.onmouseup=null; document.onmousemove=null; document.ontouchend=null; document.ontouchmove=null; }
-    }
-  </script>
-</body>
-</html>    function renderHistory() {
-      const container = document.getElementById("history");
-      container.innerHTML = "";
-      history.forEach(r => {
-        const div = document.createElement("div");
-        div.classList.add("circle");
-        if (r === P) { div.classList.add("player"); div.textContent = "P"; }
-        if (r === B) { div.classList.add("banker"); div.textContent = "B"; }
-        if (r === T) { div.classList.add("tie"); div.textContent = "T"; }
-        container.appendChild(div);
-      });
-    }
-
-    // --- Thuật toán nâng cấp Bản 3 ---
-    function nonTie(seq) { return seq.filter(x => x === P || x === B); }
-
-    function markovVote(seq) {
-      const s = nonTie(seq);
-      if (s.length < 2) return {P:0.5, B:0.5};
-      let pp=0,pb=0,bb=0,bp=0;
-      for (let i=0;i<s.length-1;i++){
-        const a=s[i], c=s[i+1];
-        if (a===P && c===P) pp++;
-        if (a===P && c===B) pb++;
-        if (a===B && c===B) bb++;
-        if (a===B && c===P) bp++;
-      }
-      const last=s[s.length-1];
-      let pNextP, pNextB;
-      if (last===P){
-        const total=pp+pb;
-        pNextP=total?pp/total:0.5; pNextB=total?pb/total:0.5;
-      } else {
-        const total=bb+bp;
-        pNextB=total?bb/total:0.5; pNextP=total?bp/total:0.5;
-      }
-      return {P:pNextP,B:pNextB};
-    }
-
-    function streakVote(seq) {
-      const s=nonTie(seq); if(s.length===0) return {P:0.5,B:0.5};
-      let side=s[s.length-1], len=1;
-      for(let i=s.length-2;i>=0;i--){ if(s[i]===side) len++; else break; }
-      let bias=0.52;
-      if(len>=5) bias=0.80; else if(len===4) bias=0.70; else if(len===3) bias=0.60; else if(len===2) bias=0.45;
-      return side===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
-    }
-
-    function pingpongVote(seq) {
-      const s=nonTie(seq); if(s.length<4) return {P:0.5,B:0.5};
-      const a=s[s.length-4],b=s[s.length-3],c=s[s.length-2],d=s[s.length-1];
-      const isAlt=(a!==b)&&(b!==c)&&(c!==d)&&(a===c)&&(b===d);
-      if(!isAlt) return {P:0.5,B:0.5};
-      const next=(d===B)?P:B;
-      return next===P?{P:0.65,B:0.35}:{P:0.35,B:0.65};
-    }
-
-    function frequencyVote(seq,n=10){
-      const s=nonTie(seq).slice(-n);
-      if(s.length===0) return {P:0.5,B:0.5};
-      const p=s.filter(x=>x===P).length, b=s.length-p;
-      if(p===b) return {P:0.5,B:0.5};
-      const maj=p>b?P:B, gap=Math.abs(p-b)/s.length;
-      const bias=0.55+Math.min(0.25,gap*0.5);
-      return maj===P?{P:bias,B:1-bias}:{P:1-bias,B:bias};
-    }
-
-    function combineVotes(votes,weights){
-      let p=0,b=0;
-      votes.forEach((v,i)=>{p+=v.P*weights[i]; b+=v.B*weights[i];});
-      const sum=p+b; return {P:p/sum,B:b/sum};
-    }
-
-    function predictNext(){
-      const pred=document.getElementById("prediction");
-      if(history.length===0){ pred.textContent="Dự đoán: Chưa có dữ liệu"; return; }
-      const v1=markovVote(history), v2=streakVote(history), v3=pingpongVote(history), v4=frequencyVote(history,10);
-      const final=combineVotes([v1,v2,v3,v4],[0.5,0.2,0.2,0.1]);
-      const pick=final.P>=final.B?P:B;
-
-      // icon màu theo dự đoán
-      let color="red";
-      if(pick===P) color="#1976d2";
-      if(pick===B) color="#d32f2f";
-      if(pick===T) color="#388e3c";
-
-      pred.innerHTML = `Dự đoán: ${pick} <span class="icon" style="background:${color}"></span>`;
-    }
   </script>
 </body>
 </html>
