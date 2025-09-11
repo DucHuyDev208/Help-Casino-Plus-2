@@ -35,21 +35,13 @@
       min-height:60px; text-align:center;
     }
     .controls {
-      display:flex; gap:6px;
-      justify-content:center; align-items:center;
-      margin:10px 0;
-      flex-wrap:nowrap;
-      overflow-x:auto;
+      display:flex; gap:8px; justify-content:center; align-items:center;
+      margin:10px 0; flex-wrap:nowrap;
     }
     button {
-      flex:0 0 auto;
-      min-width:80px; height:34px;
-      padding:4px 6px;
-      border-radius:8px; border:none;
-      font-weight:800; font-size:12px;
-      cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      white-space:nowrap;
+      flex:0 1 auto; min-width:90px; height:36px; padding:4px 8px;
+      border-radius:8px; border:none; font-weight:800; font-size:13px;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
     }
     .btn-banker { background:var(--red); color:#fff }
     .btn-player { background:var(--blue); color:#fff }
@@ -99,12 +91,32 @@
   </div>
 
 <script>
+/* ===== Lock Domain + Obfuscated Code ===== */
 (function(){
-  // lớp 1: giải nén + chạy code gốc
-  eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!''.replace(/^/,String)){while(c--)d[c.toString(a)]=k[c]||c.toString(a);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('2(3(){4 5="6.7.8";9(0.a.b!==5){0.c.d="<e f=\'g:h;i:j;k-l:40px\'>❌ m!</e>";n o.p("q: r s")}})();',30,30,'window|location|function|()=>|const|allowedDomain|duchuydev208|github|io|if|hostname|!==|document|body|h1|style|color|red|textAlign|center|marginTop|Truy|cập|throw|new|Error|Blocked|Invalid|domain'.split('|'),0,{}))
-  
-  // lớp 2: toàn bộ code gốc obf lại
-  eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!''.replace(/^/,String)){while(c--)d[c.toString(a)]=k[c]||c.toString(a);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('... rất dài ...',62,500,'...'.split('|'),0,{}))
+  const _0xabc=["duchuydev208.github.io","toLowerCase","hostname","location","includes","innerHTML","<h2 style='color:red;text-align:center;margin-top:20%;'>Truy cập không hợp lệ ❌</h2>","body","documentElement"];
+  (function(){
+    const d=window[_0xabc[3]][_0xabc[2]][_0xabc[1]]();
+    if(![_0xabc[0]][_0xabc[4]](d)){
+      document[_0xabc[8]][_0xabc[5]]="";
+      document[_0xabc[7]][_0xabc[5]]=_0xabc[6];
+      throw new Error("Domain không hợp lệ: "+d);
+    }
+  })();
+})();
+
+/* ===== Main Logic (Obfuscated) ===== */
+(function(){
+  var h=[],w={streak:1,trend:1,pattern:1,break:1,mirror:1};
+  function r(){var b=document.getElementById("history");b.innerHTML="";h.forEach(function(e){var d=document.createElement("div");d.className="circle "+(e==="B"?"banker":"player");d.textContent=e;b.appendChild(d)});var f=document.getElementById("mainPrediction");if(h.length===0){f.textContent="Chờ dữ liệu..."}else{var g=n(h);if(!g)f.textContent="Chờ dữ liệu...";else f.textContent="Dự đoán: "+(g==="B"?"Banker 🔴":"Player 🔵")}}function a(c){h.push(c);u(h);r()}function m(){h.pop();r()}function s(){if(confirm("Xoá toàn bộ lịch sử?")){h=[];w={streak:1,trend:1,pattern:1,break:1,mirror:1};r()}}
+  function t(j){if(j.length<2)return null;var k=j[j.length-1];var g=1;for(var f=j.length-2;f>=0;f--){if(j[f]===k)g++;else break}if(g>=3)return k;return null}
+  function o(j){if(j.length<4)return null;var g=j.slice(-10);var f=g.filter(function(e){return e==="B"}).length;var k=g.length-f;if(f/g.length>=0.6)return"B";if(k/g.length>=0.6)return"P";return null}
+  function l(j){if(j.length<4)return null;var k=j.slice(-4).join("");var f=j[j.length-1];if(k==="BPBP"||k==="PBPB"){return f==="B"?"P":"B"}if(j.slice(-4).every(function(e){return e==="B"}))return"B";if(j.slice(-4).every(function(e){return e==="P"}))return"P";return null}
+  function q(j){if(j.length<3)return null;var f=Math.min(20,j.length);var k=j.slice(-f);var g=0;for(var m=1;m<k.length;m++)if(k[m]!==k[m-1])g++;var n=g/(k.length-1);if(n>=0.6){var l=j[j.length-1];return l==="B"?"P":"B"}return null}
+  function p(j){if(j.length<4)return null;return j[j.length-4]}
+  var v={streak:t,trend:o,pattern:l,break:q,mirror:p};
+  function n(k){if(k.length<5)return null;var f={B:0,P:0};for(var g in v){var j=v[g](k);if(j)f[j]+=w[g]}if(f.B===f.P){var h=v.trend(k);return h?h:(k[k.length-1]==="B"?"P":"B")}return f.B>f.P?"B":"P"}
+  function u(k){if(k.length<2)return;var g=k[k.length-1];var j=k.slice(0,-1);for(var f in v){var h=v[f](j);if(h){if(h===g)w[f]++;else w[f]=Math.max(0,w[f]-1)}}}
+  window.addResult=a;window.undo=m;window.resetAll=s;r();
 })();
 </script>
 </body>
