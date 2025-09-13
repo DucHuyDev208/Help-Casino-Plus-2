@@ -1,123 +1,322 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Help Casino Plus</title>
-  <style>
-    :root {
-      --cyan:#00e0ff; --teal:#00ffaa; --bg:#0f1214; --fg:#ffffff;
-      --red:#ff4444; --blue:#0080ff;
-    }
-    * { box-sizing:border-box }
-    body {
-      background:#000; color:var(--fg);
-      font-family:Inter,Arial,sans-serif;
-      display:flex; flex-direction:column; align-items:center;
-      min-height:100vh; margin:0; padding:10px;
-    }
-    .container {
-      border:3px solid var(--cyan); border-radius:16px;
-      padding:16px; max-width:720px; width:100%;
-      box-shadow:0 0 30px rgba(0,224,255,.12);
-      background:var(--bg);
-    }
-    h1 {
-      background:linear-gradient(90deg,var(--cyan),var(--teal));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      font-size:26px; margin:0 0 10px 0; text-align:center;
-    }
-    .main-pred {
-      font-size:18px; font-weight:800; margin:12px 0; padding:12px;
-      border-radius:12px; border:2px solid var(--cyan);
-      background:linear-gradient(180deg,rgba(0,224,255,.06),rgba(0,170,255,.02));
-      display:flex; justify-content:center; align-items:center;
-      min-height:60px; text-align:center;
-    }
-    .controls {
-      display:flex; gap:8px; justify-content:center; align-items:center;
-      margin:10px 0; flex-wrap:nowrap;
-    }
-    button {
-      flex:0 1 auto; min-width:90px; height:36px; padding:4px 8px;
-      border-radius:8px; border:none; font-weight:800; font-size:13px;
-      cursor:pointer; display:flex; align-items:center; justify-content:center;
-    }
-    .btn-banker { background:var(--red); color:#fff }
-    .btn-player { background:var(--blue); color:#fff }
-    .btn-undo   { background:#666; color:#fff }
-    .btn-reset  { background:#00aaff; color:#08202a }
-    .history-box {
-      border:2px solid var(--cyan); border-radius:16px;
-      padding:16px; margin-top:16px; background:var(--bg);
-      box-shadow:0 0 20px rgba(0,224,255,.08);
-      max-width:720px; width:100%;
-    }
-    .history-box h2 {
-      text-align:center; font-size:18px; margin:0 0 12px 0; color:var(--cyan);
-    }
-    .history {
-      display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0;
-    }
-    .circle {
-      width:36px; height:36px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900; color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.6);
-    }
-    .banker { background:var(--red) }
-    .player { background:var(--blue) }
-  </style>
-</head>
-<body>
-  <div class="container" role="application">
-    <h1>Help Casino Plus</h1>
-
-    <!-- Dự đoán chính -->
-    <div class="main-pred" id="mainPrediction">Chờ dữ liệu...</div>
-
-    <!-- Nút bấm -->
-    <div class="controls" role="toolbar">
-      <button class="btn-banker" onclick="addResult('B')">Banker 🔴</button>
-      <button class="btn-player" onclick="addResult('P')">Player 🔵</button>
-      <button class="btn-undo" onclick="undo()">↶ Undo</button>
-      <button class="btn-reset" onclick="resetAll()">♻️ Reset</button>
-    </div>
-  </div>
-
-  <!-- Lịch sử -->
-  <div class="history-box">
-    <h2>Lịch sử kết quả</h2>
-    <div class="history" id="history"></div>
-  </div>
-
-<script>
-/* ===== Lock Domain + Obfuscated Code ===== */
-(function(){
-  const _0xabc=["duchuydev208.github.io","toLowerCase","hostname","location","includes","innerHTML","<h2 style='color:red;text-align:center;margin-top:20%;'>Truy cập không hợp lệ ❌</h2>","body","documentElement"];
-  (function(){
-    const d=window[_0xabc[3]][_0xabc[2]][_0xabc[1]]();
-    if(![_0xabc[0]][_0xabc[4]](d)){
-      document[_0xabc[8]][_0xabc[5]]="";
-      document[_0xabc[7]][_0xabc[5]]=_0xabc[6];
-      throw new Error("Domain không hợp lệ: "+d);
-    }
-  })();
-})();
-
-/* ===== Main Logic (Obfuscated) ===== */
-(function(){
-  var h=[],w={streak:1,trend:1,pattern:1,break:1,mirror:1};
-  function r(){var b=document.getElementById("history");b.innerHTML="";h.forEach(function(e){var d=document.createElement("div");d.className="circle "+(e==="B"?"banker":"player");d.textContent=e;b.appendChild(d)});var f=document.getElementById("mainPrediction");if(h.length===0){f.textContent="Chờ dữ liệu..."}else{var g=n(h);if(!g)f.textContent="Chờ dữ liệu...";else f.textContent="Dự đoán: "+(g==="B"?"Banker 🔴":"Player 🔵")}}function a(c){h.push(c);u(h);r()}function m(){h.pop();r()}function s(){if(confirm("Xoá toàn bộ lịch sử?")){h=[];w={streak:1,trend:1,pattern:1,break:1,mirror:1};r()}}
-  function t(j){if(j.length<2)return null;var k=j[j.length-1];var g=1;for(var f=j.length-2;f>=0;f--){if(j[f]===k)g++;else break}if(g>=3)return k;return null}
-  function o(j){if(j.length<4)return null;var g=j.slice(-10);var f=g.filter(function(e){return e==="B"}).length;var k=g.length-f;if(f/g.length>=0.6)return"B";if(k/g.length>=0.6)return"P";return null}
-  function l(j){if(j.length<4)return null;var k=j.slice(-4).join("");var f=j[j.length-1];if(k==="BPBP"||k==="PBPB"){return f==="B"?"P":"B"}if(j.slice(-4).every(function(e){return e==="B"}))return"B";if(j.slice(-4).every(function(e){return e==="P"}))return"P";return null}
-  function q(j){if(j.length<3)return null;var f=Math.min(20,j.length);var k=j.slice(-f);var g=0;for(var m=1;m<k.length;m++)if(k[m]!==k[m-1])g++;var n=g/(k.length-1);if(n>=0.6){var l=j[j.length-1];return l==="B"?"P":"B"}return null}
-  function p(j){if(j.length<4)return null;return j[j.length-4]}
-  var v={streak:t,trend:o,pattern:l,break:q,mirror:p};
-  function n(k){if(k.length<5)return null;var f={B:0,P:0};for(var g in v){var j=v[g](k);if(j)f[j]+=w[g]}if(f.B===f.P){var h=v.trend(k);return h?h:(k[k.length-1]==="B"?"P":"B")}return f.B>f.P?"B":"P"}
-  function u(k){if(k.length<2)return;var g=k[k.length-1];var j=k.slice(0,-1);for(var f in v){var h=v[f](j);if(h){if(h===g)w[f]++;else w[f]=Math.max(0,w[f]-1)}}}
-  window.addResult=a;window.undo=m;window.resetAll=s;r();
-})();
-</script>
-</body>
+<!DOCTYPE html>  
+<html lang="vi">  
+<head>  
+  <meta charset="utf-8"/>  
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>  
+  <title>Help Casino Plus</title>  
+  <style>  
+    :root { --cyan:#00e0ff; --teal:#00ffaa; --bg:#0f1214; --fg:#fff; --red:#ff4444; --blue:#0080ff; }  
+    *{box-sizing:border-box}  
+    body{background:#000;color:var(--fg);font-family:Inter,Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;margin:0;padding:10px}  
+    .container{border:3px solid var(--cyan);border-radius:16px;padding:16px;max-width:820px;width:100%;box-shadow:0 0 30px rgba(0,224,255,.12);background:var(--bg)}  
+    h1{background:linear-gradient(90deg,var(--cyan),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:26px;margin:0 0 10px 0;text-align:center}  
+    .main-pred{font-size:18px;font-weight:800;margin:12px 0;padding:12px;border-radius:12px;border:2px solid var(--cyan);background:linear-gradient(180deg,rgba(0,224,255,.06),rgba(0,170,255,.02));display:flex;justify-content:center;align-items:center;min-height:60px;text-align:center}  
+    .controls{display:flex;gap:8px;justify-content:center;align-items:center;margin:10px 0;flex-wrap:nowrap}  
+    button{flex:0 1 auto;min-width:90px;height:36px;padding:4px 8px;border-radius:8px;border:none;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}  
+    .btn-banker{background:var(--red);color:#fff}.btn-player{background:var(--blue);color:#fff}.btn-undo{background:#666;color:#fff}.btn-reset{background:#00aaff;color:#08202a}  
+    .history-box{border:2px solid var(--cyan);border-radius:16px;padding:16px;margin-top:16px;background:var(--bg);box-shadow:0 0 20px rgba(0,224,255,.08);max-width:820px;width:100%}  
+    .history-box h2{color:var(--cyan);text-align:center;margin:0 0 12px 0}  
+    .history{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}  
+    .circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.6)}  
+    .banker{background:var(--red)}.player{background:var(--blue)}  
+  </style>  
+</head>  
+<body>  
+  <div class="container" role="application">  
+    <h1>Help Casino Plus</h1>  
+    <div class="main-pred" id="mainPrediction">Đang khởi tạo...</div>  
+    <div class="controls" role="toolbar">  
+      <button class="btn-banker" onclick="addResult('B')">Banker 🔴</button>  
+      <button class="btn-player" onclick="addResult('P')">Player 🔵</button>  
+      <button class="btn-undo" onclick="undo()">↶ Undo</button>  
+      <button class="btn-reset" onclick="resetHistory()">♻️ Reset</button>  
+    </div>  
+  </div>  
+  
+  <div class="history-box">  
+    <h2>Lịch sử kết quả</h2>  
+    <div class="history" id="history"></div>  
+  </div>  
+  
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script>  
+  
+<script>  
+/*  
+  Predictor (TFJS + fallback hybrid)  
+  - TFJS model nếu có web-model/model.json  
+  - Hybrid fallback: heuristics + Q-learning  
+*/  
+  
+const SEQ_LEN = 10;  
+let historyData = [];  
+let model = null;  
+let modelLoaded = false;  
+let Q = {};  
+const Q_KEY = "hc_qtable_v1";  
+const METHODS = {};  
+let alpha = 0.3, gamma = 0.8, epsilon = 0.15;  
+let lastAction = null, lastState = null;  
+  
+// ===== LocalStorage Q load/save =====  
+function loadQ() {  
+  try {  
+    const raw = localStorage.getItem(Q_KEY);  
+    if (raw) Q = JSON.parse(raw); else Q = {};  
+  } catch(e) { Q = {}; }  
+}  
+function saveQ() { try { localStorage.setItem(Q_KEY, JSON.stringify(Q)); } catch(e) {} }  
+loadQ();  
+  
+// ===== Heuristic methods =====  
+function streakMethod(hist) {  
+  if (hist.length < 2) return null;  
+  let last = hist[hist.length-1];  
+  let streak = 1;  
+  for (let i = hist.length-2; i >= 0; i--) {  
+    if (hist[i] === last) streak++; else break;  
+  }  
+  return streak >= 3 ? last : null;  
+}  
+function trendMethod(hist) {  
+  if (hist.length < 4) return null;  
+  const seg = hist.slice(-Math.min(20,hist.length));  
+  const b = seg.filter(x=>x==="B").length, p = seg.length - b;  
+  const pb = (b+1)/(seg.length+2), pp = (p+1)/(seg.length+2);  
+  if (pb >= 0.62) return "B";  
+  if (pp >= 0.62) return "P";  
+  return null;  
+}  
+function patternMethod(hist) {  
+  if (hist.length < 4) return null;  
+  const last4 = hist.slice(-4).join("");  
+  const last = hist[hist.length-1];  
+  if (last4 === "BPBP" || last4 === "PBPB") return last === "B" ? "P" : "B";  
+  if (hist.slice(-4).every(x=>x==="B")) return "B";  
+  if (hist.slice(-4).every(x=>x==="P")) return "P";  
+  return null;  
+}  
+function breakMethod(hist) {  
+  if (hist.length < 3) return null;  
+  const win = Math.min(20, hist.length);  
+  const seg = hist.slice(-win);  
+  let changes = 0;  
+  for (let i=1;i<seg.length;i++) if (seg[i] !== seg[i-1]) changes++;  
+  const changePct = changes/(seg.length-1);  
+  if (changePct >= 0.6) {  
+    const last = hist[hist.length-1];  
+    return last==="B"?"P":"B";  
+  }  
+  return null;  
+}  
+function mirrorMethod(hist) {  
+  if (hist.length < 4) return null;  
+  return hist[hist.length-4];  
+}  
+function markovMethod(hist) {  
+  if (hist.length < 3) return null;  
+  let trans = {B:{B:1,P:1}, P:{B:1,P:1}};  
+  for (let i=1;i<hist.length;i++){  
+    trans[hist[i-1]][hist[i]]++;  
+  }  
+  const last = hist[hist.length-1];  
+  return trans[last].B >= trans[last].P ? "B" : "P";  
+}  
+METHODS.streak = streakMethod;  
+METHODS.trend = trendMethod;  
+METHODS.pattern = patternMethod;  
+METHODS.break = breakMethod;  
+METHODS.mirror = mirrorMethod;  
+METHODS.markov = markovMethod;  
+  
+// ===== Q-learning =====  
+function getState(hist) {  
+  if (hist.length < 3) return "START";  
+  return hist.slice(-3).join("");  
+}  
+function chooseActionQ(state) {  
+  if (!Q[state]) Q[state] = {};  
+  if (Math.random() < epsilon) {  
+    const arr = Object.keys(METHODS);  
+    return arr[Math.floor(Math.random()*arr.length)];  
+  }  
+  let best=null, bestVal=-Infinity;  
+  for (let m in METHODS) {  
+    const v = Q[state][m] || 0;  
+    if (v > bestVal) { bestVal = v; best = m; }  
+  }  
+  return best || Object.keys(METHODS)[0];  
+}  
+function updateQLearning(prevHist, action, actual) {  
+  if (!action) return;  
+  const state = getState(prevHist);  
+  const nextState = getState(prevHist.concat([actual]));  
+  if (!Q[state]) Q[state] = {};  
+  if (!Q[nextState]) Q[nextState] = {};  
+  const pred = METHODS[action](prevHist);  
+  const reward = (pred === actual) ? 1 : -1;  
+  const oldQ = Q[state][action] || 0;  
+  let future = 0;  
+  const nextVals = Object.values(Q[nextState]);  
+  if (nextVals.length) future = Math.max(...nextVals);  
+  Q[state][action] = oldQ + alpha*(reward + gamma*future - oldQ);  
+  saveQ();  
+}  
+  
+// ===== Ensemble =====  
+const scoreWindow = 50;  
+let scoreLog = {};  
+for (let m in METHODS) scoreLog[m] = [];  
+function recordMethodPerformance(methodName, wasCorrect) {  
+  const arr = scoreLog[methodName];  
+  arr.push(wasCorrect?1:0);  
+  if (arr.length > scoreWindow) arr.shift();  
+}  
+function methodAccuracy(methodName) {  
+  const arr = scoreLog[methodName];  
+  if (!arr || arr.length===0) return 0.5;  
+  return arr.reduce((a,b)=>a+b,0)/arr.length;  
+}  
+function updateEnsembleScores(prevHist, actual) {  
+  for (let m in METHODS) {  
+    const p = METHODS[m](prevHist);  
+    const wasCorrect = (p === actual);  
+    recordMethodPerformance(m, wasCorrect);  
+  }  
+}  
+  
+// ===== TFJS model =====  
+async function tryLoadModel() {  
+  try {  
+    model = await tf.loadLayersModel('web-model/model.json');  
+    modelLoaded = true;  
+    console.log("Model loaded");  
+  } catch (e) {  
+    model = null;  
+    modelLoaded = false;  
+    console.warn("No model loaded:", e);  
+  }  
+}  
+tryLoadModel();  
+function encodeSeqForModel(seq, seqLen=SEQ_LEN) {  
+  const s = seq.slice(-seqLen);  
+  const padCount = Math.max(0, seqLen - s.length);  
+  const arr = [];  
+  for (let i=0;i<padCount;i++) arr.push([0.5,0.5]);  
+  for (let r of s) arr.push(r==="B" ? [1,0] : [0,1]);  
+  return [arr];  
+}  
+async function predictWithModel(hist) {  
+  if (!modelLoaded || !model) return null;  
+  if (hist.length < 1) return null;  
+  const input = encodeSeqForModel(hist);  
+  try {  
+    const tensor = tf.tensor(input);  
+    const out = model.predict(tensor);  
+    const probs = await out.data();  
+    tf.dispose(tensor);  
+    tf.dispose(out);  
+    return probs[0] >= probs[1] ? "B" : "P";  
+  } catch (e) {  
+    console.error("Model predict error:", e);  
+    return null;  
+  }  
+}  
+  
+// ===== Hybrid Predict =====  
+function hybridEnsemblePredict(hist) {  
+  if (hist.length < 3) return null;  
+  const preds = {};  
+  for (let m in METHODS) {  
+    const p = METHODS[m](hist);  
+    if (p) preds[m] = p;  
+  }  
+  if (Object.keys(preds).length === 0) return null;  
+  for (let m in preds) {  
+    if (methodAccuracy(m) >= 0.66 && Math.random() < 0.95) return preds[m];  
+  }  
+  let scoreB = 0, scoreP = 0;  
+  for (let m in preds) {  
+    const acc = methodAccuracy(m) || 0.5;  
+    const w = 0.3 + acc;  
+    if (preds[m] === "B") scoreB += w;  
+    else scoreP += w;  
+  }  
+  if (scoreB === scoreP) {  
+    const mk = markovMethod(hist);  
+    if (mk) return mk;  
+    return hist[hist.length-1] === "B" ? "P" : "B";  
+  }  
+  return scoreB > scoreP ? "B" : "P";  
+}  
+async function autoSelect(hist) {  
+  if (modelLoaded) {  
+    const mp = await predictWithModel(hist);  
+    if (mp) return mp;  
+  }  
+  const state = getState(hist);  
+  const action = chooseActionQ(state);  
+  lastState = state;  
+  lastAction = action;  
+  const predByAction = METHODS[action](hist);  
+  if (predByAction) return predByAction;  
+  return hybridEnsemblePredict(hist);  
+}  
+  
+// ===== UI =====  
+const mainPrediction = document.getElementById("mainPrediction");  
+const historyBox = document.getElementById("history");  
+async function render() {  
+  historyBox.innerHTML = "";  
+  historyData.forEach(r => {  
+    const el = document.createElement("div");  
+    el.className = "circle " + (r === "B" ? "banker" : "player");  
+    el.textContent = r;  
+    historyBox.appendChild(el);  
+  });  
+  if (historyData.length === 0) {  
+    mainPrediction.textContent = "Chờ dữ liệu...";  
+  } else {  
+    mainPrediction.textContent = "Đang dự đoán...";  
+    const pred = await autoSelect(historyData);  
+    if (!pred) mainPrediction.textContent = "Chờ thêm dữ liệu...";  
+    else mainPrediction.textContent = "Dự đoán: " + (pred === "B" ? "Banker 🔴" : "Player 🔵");  
+  }  
+}  
+async function addResult(r) {  
+  const prevHist = [...historyData];  
+  const prevAction = lastAction;  
+  historyData.push(r);  
+  if (prevAction && lastState) {  
+    updateQLearning(prevHist, prevAction, r);  
+  }  
+  updateEnsembleScores(prevHist, r);  
+  lastAction = null; lastState = null;  
+  await render();  
+}  
+function undo() {  
+  historyData.pop();  
+  render();  
+}  
+function resetHistory() {  
+  if (!confirm("Xoá toàn bộ lịch sử kết quả?")) return;  
+  historyData = [];  
+  render();  
+}  
+  
+// load history  
+(function loadHistory() {  
+  try {  
+    const raw = localStorage.getItem("hc_history_v1");  
+    if (raw) historyData = JSON.parse(raw);  
+  } catch(e) { historyData = []; }  
+})();  
+setInterval(()=> {  
+  try { localStorage.setItem("hc_history_v1", JSON.stringify(historyData)); } catch(e) {}  
+}, 2000);  
+  
+(async () => {  
+  await render();  
+})();  
+</script>  
+</body>  
 </html>
